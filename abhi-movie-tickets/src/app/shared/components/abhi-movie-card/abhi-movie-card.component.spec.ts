@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AbhiViewTileComponent } from './abhi-view-tile.component';
+import { AbhiMovieCardComponent } from './abhi-movie-card.component';
 
-describe('AbhiViewTileComponent', () => {
-  let component: AbhiViewTileComponent;
-  let fixture: ComponentFixture<AbhiViewTileComponent>;
+describe('AbhiMovieCardComponent', () => {
+  let component: AbhiMovieCardComponent;
+  let fixture: ComponentFixture<AbhiMovieCardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AbhiViewTileComponent ]
+      declarations: [ AbhiMovieCardComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AbhiViewTileComponent);
+    fixture = TestBed.createComponent(AbhiMovieCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

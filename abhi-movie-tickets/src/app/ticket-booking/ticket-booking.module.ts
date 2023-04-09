@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { TicketBookingRoutingModule } from './ticket-booking-routing.module';
 import { TicketsBookingHomeComponent } from './tickets-booking-home/tickets-booking-home.component';
 import { LoginTicketBookingComponent } from './login-ticket-booking/login-ticket-booking.component';
 import { SeatBookingModalComponent } from './seat-booking-modal/seat-booking-modal.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -15,6 +15,7 @@ import { SeatBookingModalComponent } from './seat-booking-modal/seat-booking-mod
   ],
   imports: [
     CommonModule,
+    SharedModule,
     TicketBookingRoutingModule
   ]
 })

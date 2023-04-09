@@ -1,17 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AbhiViewCardComponent } from './components/abhi-view-card/abhi-view-card.component';
-import { AbhiViewTileComponent } from './components/abhi-view-tile/abhi-view-tile.component';
-
-
+import { AbhiBadgeComponent } from './components/abhi-badge/abhi-badge.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { AbhiTheatreCardComponent } from './components/abhi-theatre-card/abhi-theatre-card.component';
+import { AbhiMovieCardComponent } from './components/abhi-movie-card/abhi-movie-card.component';
+import { AbhiSeatSelectorComponent } from './components/abhi-seat-selector/abhi-seat-selector.component';
 
 @NgModule({
   declarations: [
-    AbhiViewCardComponent,
-    AbhiViewTileComponent
+    AbhiBadgeComponent,
+    AbhiTheatreCardComponent,
+    AbhiMovieCardComponent,
+    AbhiSeatSelectorComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    BrowserAnimationsModule
+  ],
+  exports: [
+    AbhiBadgeComponent
   ]
 })
 export class SharedModule { }

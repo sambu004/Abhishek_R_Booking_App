@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AbhiViewCardComponent } from './abhi-view-card.component';
+import { AbhiBadgeComponent } from './abhi-badge.component';
 
-describe('AbhiViewCardComponent', () => {
-  let component: AbhiViewCardComponent;
-  let fixture: ComponentFixture<AbhiViewCardComponent>;
+describe('AbhiBadgeComponent', () => {
+  let component: AbhiBadgeComponent;
+  let fixture: ComponentFixture<AbhiBadgeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AbhiViewCardComponent ]
+      declarations: [ AbhiBadgeComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AbhiViewCardComponent);
+    fixture = TestBed.createComponent(AbhiBadgeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
