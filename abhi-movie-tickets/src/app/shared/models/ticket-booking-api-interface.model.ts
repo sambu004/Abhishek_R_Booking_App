@@ -1,3 +1,5 @@
+import { HttpHeaders, HttpParams } from "@angular/common/http";
+
 export interface IGetTheatresAndMoviesReq {
     user_mail_id: string;
 }
@@ -51,5 +53,10 @@ export interface IBookTicketsReq {
 
 export interface IBookTicketsRes {
     message: string
+}
+
+export interface IHeaders {
+    headers: HttpHeaders;
+    params: HttpParams;
 }
 

@@ -5,6 +5,9 @@ import { TicketsBookingHomeComponent } from './tickets-booking-home/tickets-book
 import { LoginTicketBookingComponent } from './login-ticket-booking/login-ticket-booking.component';
 import { SeatBookingModalComponent } from './seat-booking-modal/seat-booking-modal.component';
 import { SharedModule } from '../shared/shared.module';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -14,8 +17,12 @@ import { SharedModule } from '../shared/shared.module';
     SeatBookingModalComponent
   ],
   imports: [
+    MatButtonModule,
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     SharedModule,
+    HttpClientModule,
     TicketBookingRoutingModule
   ]
 })
