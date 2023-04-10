@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { IGetTheatresAndMoviesReq, IGetTheatresAndMoviesRes } from 'src/app/shared/models/ticket-booking-api-interface.model';
+import { IGetTheatresAndMoviesReq, IGetTheatresAndMoviesRes, IMoviesRes } from 'src/app/shared/models/ticket-booking-api-interface.model';
 import { TicketBookingService } from '../ticket-booking.service';
 import { BOOKING_APP } from 'src/app/shared/constants/ticket-booking-constants';
+import { IMovieDetail, IMovies, ITheatres } from 'src/app/shared/models/theatre-and-movie-interface';
 
 @Component({
   selector: 'app-tickets-booking-home',
@@ -10,7 +11,7 @@ import { BOOKING_APP } from 'src/app/shared/constants/ticket-booking-constants';
 })
 
 export class TicketsBookingHomeComponent implements OnInit {
-  theatresAndMoviesRes!: IGetTheatresAndMoviesRes;
+  theatreAndMovieList: ITheatres[] = [];
   emailId!: string;
   showSpinner = false;
   constructor(private ticketService: TicketBookingService) {}
@@ -29,8 +30,8 @@ export class TicketsBookingHomeComponent implements OnInit {
   getAllTheatresAndMovies(reqObj: IGetTheatresAndMoviesReq): void {
     this.ticketService.getAllTheatresAndMovies(reqObj).subscribe({
       next: (res: IGetTheatresAndMoviesRes)=>{
+        this.createDataStructure(res);
         this.showSpinner = false;
-        this.theatresAndMoviesRes = res;
       },
       error: ()=>{
         this.showSpinner = false;
@@ -38,8 +39,75 @@ export class TicketsBookingHomeComponent implements OnInit {
     });
   }
 
+  // creates a manipulative list of theatre with its movies and shows
   createDataStructure(theatreMovieData: IGetTheatresAndMoviesRes) {
-    
+    theatreMovieData.theatre.forEach((theatreData)=>{
+      const theatresAndMovies: ITheatres = <ITheatres>{};
+      theatresAndMovies.address = theatreData.address;
+      theatresAndMovies.customerRating = theatreData.customer_rating;
+      theatresAndMovies.theatreName = theatreData.theatre_name;
+      theatresAndMovies.theatreImage = theatreData.thumbnail_url;
+      theatresAndMovies.websiteUrl = theatreData.website;
+      const moviesData = this.createMovieDataStructure(theatreData, theatreMovieData.movies);
+      theatresAndMovies.movieNames = Array.from(moviesData.keys());
+      theatresAndMovies.movies = Array.from(moviesData.values());
+      this.theatreAndMovieList.push(theatresAndMovies);
+    });
+  }
+
+  // creates a movies map with key as movie name and values as movie details
+  createMovieDataStructure(theatreData: any, movieDetails: any[]): any {
+    const movieMap = new Map();
+    BOOKING_APP.shows.forEach((showKey)=>{
+      const movieName = theatreData[`${showKey}${BOOKING_APP.movie}`];
+      const showTime = theatreData[`${showKey}${BOOKING_APP.time}`];
+      const movieData: IMovies = movieMap.get(movieName);
+      if (movieData) {
+        movieData.shows = movieData.shows.concat(showTime);
+        movieMap.set(movieName, movieData);
+      } else {
+        const movieData: IMovies = <IMovies>{};
+        movieData.shows = [showTime];
+        movieData.bookedSeats =  this.filterAndConcatBookedSeatsdata(theatreData.booked_seats,
+           showKey, showTime);
+        movieData.movieName = movieName;
+        movieData.movieDetails = this.setMovieData(movieName, movieDetails);
+        movieMap.set(movieName, movieData)
+      }
+    });
+    return movieMap;
+  }
+
+  // to filter the booked seats data with today's date
+  filterAndConcatBookedSeatsdata(bookedSeats: any[], showKey: string, showTime: string): any[] {
+    if (bookedSeats?.length > 0) {
+      const bookedSeatsArray: any = [];
+      let currentDate: any = new Date();
+      currentDate = currentDate.toLocaleString().split(',')[0];
+      bookedSeats?.forEach((seats)=>{
+        if(seats.date = currentDate && seats[`${showKey}${BOOKING_APP.time}`] === showTime){
+          const seatList = JSON.parse(seats[`${showKey}${BOOKING_APP.seats}`]);
+          bookedSeatsArray.concat(seatList);
+        }
+      });
+      return bookedSeatsArray;
+    }
+    return [];
+  }
+
+  // sets movie details of a movie and send appropriate data
+  setMovieData(movieName: any, movieDetails: IMoviesRes[]): IMovieDetail {
+    const movieDataRes: any = movieDetails.find((data)=>{
+      return data.movie_name === movieName
+    })
+    const movieDetailObj: IMovieDetail = <IMovieDetail>{};
+    movieDetailObj.language = movieDataRes.language;
+    movieDetailObj.movieGenre = movieDataRes.tags;
+    movieDetailObj.movieRatings = movieDataRes.imdb_rating;
+    movieDetailObj.posterUrl = movieDataRes.thumbnail_url;
+    movieDetailObj.releaseDate = movieDataRes.release_date;
+    movieDetailObj.runningTime = movieDataRes.running_time;
+    return movieDetailObj;
   }
 
 }
