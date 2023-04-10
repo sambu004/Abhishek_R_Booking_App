@@ -1,0 +1,26 @@
+#filmCircle {
+    -webkit-animation: spin 2s ease-in-out infinite;
+    animation: spin 2s ease-in-out infinite;
+  }
+  
+
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .ab-spinner-modal {
+    width: 100vw;
+    height: 100vh;
+    z-index: var(--ab-z-index-md);
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

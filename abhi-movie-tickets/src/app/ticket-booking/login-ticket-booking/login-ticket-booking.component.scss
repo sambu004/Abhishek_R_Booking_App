@@ -1,0 +1,40 @@
+.ticket-booking-login {
+    .content-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+        background-image: url('../../../assets/cinema-reel.jpg');
+        background-size: 100% 100%;
+        .content-body {
+            width: 50%;
+            height: 60%;
+            .content-body-header {
+                .ab-header-title{
+                    width: 100%;
+                }
+                .ab-icon{
+                    width: 100%;
+                }
+            }
+            .email-content{
+                padding-bottom: 75px;
+                .email-input {
+                    width: 250px;
+                    height: 35px;
+                    padding: 0px 10px;
+                    background-color: var(--ab-light-sky-blue);
+                    border: 1px solid var(--ab-dark-sky-blue);
+                    border-radius: var(--md-border-radius);
+                }
+                .email-input.error-email {
+                    border: 1px solid var(--ab-shine-red) !important;
+                }
+                .ab-login-button {
+                    margin-top: 10px;
+                }
+            }
+        }
+    }
+}

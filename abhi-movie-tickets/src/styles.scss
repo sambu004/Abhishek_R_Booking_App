@@ -1,0 +1,58 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import './assets/variable.scss';
+
+.ab-row-center {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+}
+
+.ab-half-height {
+    height: 50%;
+}
+
+.ab-focus-color:focus-visible {
+    outline-color: var(--ab-shine-sky);
+}
+
+.ab-error {
+    color: var(--ab-shine-red);
+}
+
+.ab-focus-color:focus {
+    outline-color: var(--ab-shine-sky);
+}
+
+.ab-row {
+    width: 100%;
+}
+
+.ab-large-heading {
+    font-weight: var(--ab-font-weight-bold);
+    font-size: var(--ab-font-size-xl);
+}
+
+.ab-secondary-heading {
+    font-weight: var(--ab-font-weight-strong);
+    font-size: var(--ab-font-size-lg);
+}
+
+.ab-small-heading {
+    font-weight: var(--ab-font-weight-medium);
+    font-size: var(--ab-font-size-md);
+}
+
+.ab-basic-modal-background {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+body {
+    font-family: var(--ab-font-families);
+}
