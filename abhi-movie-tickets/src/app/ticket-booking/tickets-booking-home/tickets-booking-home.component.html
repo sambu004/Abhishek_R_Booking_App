@@ -1,3 +1,37 @@
-<ng-template [ngIf]="showSpinner">
-    <abhi-reel-spinner></abhi-reel-spinner>
-</ng-template>
+<div class="ab-theatre-movie-container">
+    <div class="ab-header">
+        <div class="ab-header-button">
+            <button class="ab-login-button ab-focus-color" (click)="goToLogin()" mat-raised-button> Back</button>
+        </div>
+        <div class="ab-header-title">
+            {{headerTitle}}
+        </div>
+    </div>
+    <ng-template [ngIf]="showSpinner">
+        <abhi-reel-spinner></abhi-reel-spinner>
+    </ng-template>
+    <ng-template [ngIf]="listType === 'theatreList'">
+        <mat-grid-list class="ab-section" cols="3">
+            <ng-template ngFor let-theatre [ngForOf]="theatreAndMovieList" let-i="index">
+                <mat-grid-tile>
+                    <abhi-theatre-card (onTheatreCardClick)="getSelectedTheatre($event)"
+                        [theatreDetails]="theatre"></abhi-theatre-card>
+                </mat-grid-tile>
+            </ng-template>
+        </mat-grid-list>
+    </ng-template>
+    <ng-template [ngIf]="listType === 'movieList'">
+        <div class="container-fluid ab-section">
+            <div class="row align-items-center">
+                <div class="col-lg-2">
+                </div>
+                <ng-template ngFor let-movie [ngForOf]="selectedTheatre.movies" let-i="index">
+                    <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center align-items-center">
+                        <abhi-movie-card [movieData]="movie"
+                            [theatreName]="selectedTheatre.theatreName"></abhi-movie-card>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </ng-template>
+</div>

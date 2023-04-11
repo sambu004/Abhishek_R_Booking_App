@@ -3,6 +3,7 @@ import { IGetTheatresAndMoviesReq, IGetTheatresAndMoviesRes, IMoviesRes } from '
 import { TicketBookingService } from '../ticket-booking.service';
 import { BOOKING_APP } from 'src/app/shared/constants/ticket-booking-constants';
 import { IMovieDetail, IMovies, ITheatres } from 'src/app/shared/models/theatre-and-movie-interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tickets-booking-home',
@@ -14,7 +15,10 @@ export class TicketsBookingHomeComponent implements OnInit {
   theatreAndMovieList: ITheatres[] = [];
   emailId!: string;
   showSpinner = false;
-  constructor(private ticketService: TicketBookingService) {}
+  selectedTheatre!: ITheatres;
+  listType: 'theatreList' | 'movieList' = 'theatreList';
+  headerTitle: 'Theatres' | 'Movies' = 'Theatres';
+  constructor(private ticketService: TicketBookingService, private route: Router) {}
 
   ngOnInit(): void {
     const apiKey = sessionStorage.getItem(BOOKING_APP.apiKey);
@@ -64,12 +68,15 @@ export class TicketsBookingHomeComponent implements OnInit {
       const movieData: IMovies = movieMap.get(movieName);
       if (movieData) {
         movieData.shows = movieData.shows.concat(showTime);
+        movieData.bookedSeats.push(this.filterAndConcatBookedSeatsdata(theatreData.booked_seats,
+          showKey, showTime));
         movieMap.set(movieName, movieData);
       } else {
         const movieData: IMovies = <IMovies>{};
         movieData.shows = [showTime];
-        movieData.bookedSeats =  this.filterAndConcatBookedSeatsdata(theatreData.booked_seats,
-           showKey, showTime);
+        movieData.bookedSeats = [];
+        movieData.bookedSeats.push(this.filterAndConcatBookedSeatsdata(theatreData.booked_seats,
+           showKey, showTime));
         movieData.movieName = movieName;
         movieData.movieDetails = this.setMovieData(movieName, movieDetails);
         movieMap.set(movieName, movieData)
@@ -108,6 +115,21 @@ export class TicketsBookingHomeComponent implements OnInit {
     movieDetailObj.releaseDate = movieDataRes.release_date;
     movieDetailObj.runningTime = movieDataRes.running_time;
     return movieDetailObj;
+  }
+
+  getSelectedTheatre(theatre: ITheatres) {
+    this.selectedTheatre = theatre;
+    this.listType = 'movieList';
+    this.headerTitle = 'Movies';
+  }
+
+  goToLogin() {
+    if(this.listType === 'theatreList'){
+      sessionStorage.removeItem('BOOKING_APP.apiKey');
+      this.route.navigateByUrl('/login');
+    } else {
+      this.listType = 'theatreList';
+    }
   }
 
 }

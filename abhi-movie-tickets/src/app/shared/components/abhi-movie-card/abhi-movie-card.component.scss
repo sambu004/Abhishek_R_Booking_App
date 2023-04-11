@@ -1,0 +1,25 @@
+.ab-card-body{
+    #ab-header-info{
+        background-image: url('../../../../assets/icons8-info-squared-96.png');
+        background-size: cover;
+        height: 25px;
+        width: 25px;
+    }
+    .ab-image {
+        width: 60%;
+        align-self: center;
+    }
+    max-width: 300px;
+    cursor: pointer;
+    .ab-rating{
+        display: inline-flex;
+        .rating-text {
+            margin-left: 5px;
+            font-size: 14px;
+            align-self: self-end;
+        }
+    }
+    .ab-movie-release {
+        font-size: 14px;
+    }
+}

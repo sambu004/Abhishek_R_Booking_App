@@ -8,6 +8,7 @@ import { SharedModule } from '../shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
   ],
   imports: [
     MatButtonModule,
+    MatGridListModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

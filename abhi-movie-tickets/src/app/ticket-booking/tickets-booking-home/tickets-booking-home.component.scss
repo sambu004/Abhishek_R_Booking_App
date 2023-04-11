@@ -1,0 +1,25 @@
+.ab-theatre-movie-container {
+    .ab-header{
+        background: #EFE5FD;
+        z-index: 1;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 45px;
+        border-bottom: 1px solid var(--ab-disabled-gray);
+        display: inline-flex;
+        .ab-header-button{
+            width: 50%;
+            margin-top: 5px;
+            margin-left: 10px;
+        }
+        .ab-header-title {
+            width: 50%;
+            font-size: 25px;
+        }
+    }
+    
+    .ab-section {
+        padding-top: calc(100vh - 560px);
+    }
+}

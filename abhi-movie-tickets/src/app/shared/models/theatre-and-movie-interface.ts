@@ -11,7 +11,7 @@ export interface ITheatres {
 export interface IMovies {
     movieName: string;
     shows: string[];
-    bookedSeats: number[];
+    bookedSeats: any[];
     movieDetails: IMovieDetail;
 }
 
@@ -27,4 +27,11 @@ export interface IMovieDetail {
 export interface ISeats {
     seatId: number;
     seatOccupied: boolean
+}
+
+export interface IMovieCardEvent {
+    theatreName: string;
+    movieName: string;
+    showTime: string;
+    bookedSeats: any[];
 }
