@@ -42,10 +42,12 @@ export class TicketsBookingHomeComponent implements OnInit {
     this.ticketService.getAllTheatresAndMovies(reqObj).subscribe({
       next: (res: IGetTheatresAndMoviesRes)=>{
         this.createDataStructure(res);
+        this.listType = 'theatreList';
         this.showSpinner = false;
       },
       error: ()=>{
         this.showSpinner = false;
+        sessionStorage.removeItem(BOOKING_APP.apiKey);
         this.route.navigateByUrl('/login');
       }
     });
@@ -145,7 +147,7 @@ export class TicketsBookingHomeComponent implements OnInit {
 
   goToLogin() {
     if(this.listType === 'theatreList'){
-      sessionStorage.removeItem('BOOKING_APP.apiKey');
+      sessionStorage.removeItem(BOOKING_APP.apiKey);
       this.route.navigateByUrl('/login');
     } else {
       this.listType = 'theatreList';
@@ -179,9 +181,9 @@ export class TicketsBookingHomeComponent implements OnInit {
     this.ticketService.bookTickets(bookingReq).subscribe({
       next:(res: IBookTicketsRes)=>{
         this.showSpinner = false;
-        this.listType = 'theatreList';
         this.selectedMovieDetails = <IMovieCardEvent>{};
         this.selectedTheatre = <ITheatres>{};
+        this.theatreAndMovieList = [];
         this.openNotifier(res.message, 'Success');
         const reqObj: IGetTheatresAndMoviesReq = <IGetTheatresAndMoviesReq>{};
         reqObj.user_mail_id = this.emailId;
