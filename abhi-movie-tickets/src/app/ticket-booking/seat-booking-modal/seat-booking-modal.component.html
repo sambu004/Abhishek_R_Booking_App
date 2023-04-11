@@ -1,1 +1,30 @@
-<p>seat-booking-modal works!</p>
+
+<div class="modal" id="ab-modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Book tickets</h5>
+          <div class="ab-info-heading">
+            <div><strong>Theatre Name: </strong>{{selectedMovieDetails.theatreName}}</div>
+            <div><strong>Movie Name: </strong>{{selectedMovieDetails.movieName}}</div>
+            </div>
+        </div>
+        <div class="modal-body">
+            <ng-template ngFor let-seatRow [ngForOf]="seatRows" let-rowId="index">
+                <div class="ab-row ab-row-center">
+                    <ng-template ngFor let-seatCol [ngForOf]="seatRow" let-colId="index">
+                        <div><abhi-seat-selector (onSeatClick)="saveSelectedSeats($event)" [seatId]="seatCol.id" [isDisabled]="seatCol.isDisabled"></abhi-seat-selector></div>
+                    </ng-template>
+                </div>
+            </ng-template>
+            <div class="ab-info"><i>Click on the seat icon to select the seats.</i></div>
+            <div class="ab-note"><i>Please note that tickets cannot be cancelled.</i></div>
+        </div>
+        <div class="modal-footer">
+            <div><button class="ab-login-button ab-focus-color" (click)="onCancel()" mat-raised-button>Cancel</button></div>
+            <div><button class="ab-login-button ab-focus-color" (click)="onBook()" color="primary" mat-raised-button>Book</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+

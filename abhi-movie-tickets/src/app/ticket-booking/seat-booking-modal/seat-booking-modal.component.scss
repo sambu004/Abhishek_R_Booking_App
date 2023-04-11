@@ -1,5 +1,16 @@
-.test {
-    
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
+#ab-modal{
+    display: block;
+    background: rgba(0, 0, 0, 0.25);
+}
+.ab-info-heading{
+    font-size: 14px;
+}
+
+.ab-info{
+    margin-top: 10px;
+    color: royalblue;
+}
+
+.ab-note{
+    color: var(--ab-shine-red);
 }

@@ -8,13 +8,14 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class AbhiSeatSelectorComponent implements OnInit {
   @Input() seatId!: number;
   @Input() isDisabled = false;
-  @Output() onSeatClick: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() onSeatClick: EventEmitter<any> = new EventEmitter<any>();
   isSelected = false;
   ngOnInit(): void {
   }
 
   onSeatSelection(): void {
     this.isSelected = !this.isSelected;
+    this.onSeatClick.emit(this.seatId);
   }
 
 }

@@ -5,7 +5,7 @@ export interface IGetTheatresAndMoviesReq {
 }
 
 export interface IGetTheatresAndMoviesRes {
-    theatre: string;
+    theatre: ITheatreDetailsRes[];
     movies: IMoviesRes[];
 }
 

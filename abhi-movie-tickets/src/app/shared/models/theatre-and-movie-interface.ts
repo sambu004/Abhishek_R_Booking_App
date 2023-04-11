@@ -4,12 +4,14 @@ export interface ITheatres {
     customerRating: string;
     websiteUrl: string;
     address: string;
+    movieNames: any[];
     movies: IMovies[];
 }
 
 export interface IMovies {
     movieName: string;
     shows: string[];
+    bookedSeats: any[];
     movieDetails: IMovieDetail;
 }
 
@@ -20,4 +22,16 @@ export interface IMovieDetail {
     posterUrl: string;
     movieRatings: string;
     movieGenre: string;
+}
+
+export interface ISeats {
+    seatId: number;
+    seatOccupied: boolean
+}
+
+export interface IMovieCardEvent {
+    theatreName: string;
+    movieName: string;
+    showTime: string;
+    bookedSeats: any[];
 }

@@ -1,1 +1,3 @@
-<p>abhi-badge works!</p>
+<div [ngClass]="{'ab-badge-green': badgetype === 'available',
+ 'ab-badge-orange': badgetype === 'warning',
+'ab-badge-red': badgetype === 'redZone'}" class="ab-basic-badge" (click)="onClick()"> {{badgeText}} </div>

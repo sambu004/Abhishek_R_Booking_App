@@ -1,0 +1,27 @@
+.ab-basic-badge {
+    display: inline-flex;
+    justify-content: center;
+    font-size: 13px;
+    line-height: 22px;
+    width: 75px;
+    height: 25px;
+    border-radius: var(--rounded-border-radius) ;
+}
+
+.ab-badge-green {
+    border: 1px solid var(--ab-shine-green);
+    color: var(--ab-shine-green);
+    background-color: var(--ab-light-cyan);
+}
+
+.ab-badge-orange {
+    border: 1px solid var(--ab-shine-orange);
+    color: var(--ab-shine-orange);
+    background-color: var(--ab-light-orange);
+}
+
+.ab-badge-red {
+    border: 1px solid var(--ab-shine-red);
+    color: var(--ab-shine-red);
+    background-color: var(--ab-light-red);
+}

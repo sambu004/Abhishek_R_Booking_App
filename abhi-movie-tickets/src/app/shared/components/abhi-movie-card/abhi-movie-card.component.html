@@ -1,1 +1,36 @@
-<p>abhi-movie-card works!</p>
+<mat-card class="ab-card-body">
+    <mat-card-header>
+        <div mat-card-avatar [matTooltip]="movieData.movieDetails.language" id="ab-header-info"></div>
+        <mat-card-title>{{movieData.movieName}}</mat-card-title>
+        <mat-card-subtitle>
+            <div>{{movieData.movieDetails.movieGenre}}</div>
+            <div> {{movieData.movieDetails.runningTime}}</div>
+        </mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image class="ab-image" [src]="movieData.movieDetails.posterUrl" [alt]="movieData.movieName"
+        onerror="this.onerror=null; this.src='https://wallpapercave.com/wp/wp4016118.jpg'">
+    <mat-card-content>
+        <div class="ab-rating">
+            <div class="rating-icon">
+                <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M10 0L12.2451 6.56434H19.5106L13.6327 10.6213L15.8779 17.1857L10 13.1287L4.12215 17.1857L6.36729 10.6213L0.489435 6.56434H7.75486L10 0Z"
+                        fill="#F5E026" />
+                </svg>
+            </div>
+            <div class="rating-text">IMBD: {{movieData.movieDetails.movieRatings}}</div>
+        </div>
+        <div class="ab-movie-release">
+            <strong>Release: </strong>{{movieData.movieDetails.releaseDate}}
+        </div>
+    </mat-card-content>
+    <mat-divider></mat-divider>
+    <mat-card-actions>
+        <ng-template ngFor let-show [ngForOf]="movieData.shows" let-i="index">
+            <abhi-badge class="pr-10" [badgetype]="setBadgeType(i)" [badgeText]="show" (onBadgeClick)="onShowClicked($event, i)"></abhi-badge>
+        </ng-template>
+    </mat-card-actions>
+    <mat-card-content>
+        <mat-card-subtitle>Please click on the show timings for booking Seats!</mat-card-subtitle>
+    </mat-card-content>
+</mat-card>

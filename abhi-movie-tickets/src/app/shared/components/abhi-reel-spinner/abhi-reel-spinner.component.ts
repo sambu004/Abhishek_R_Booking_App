@@ -27,7 +27,6 @@ export class AbhiReelSpinnerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log(this.timeInterval);
     clearInterval(this.timeInterval);
   }
 
