@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import {MatGridListModule} from '@angular/material/grid-list';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
     ReactiveFormsModule,
     SharedModule,
     HttpClientModule,
-    TicketBookingRoutingModule
+    TicketBookingRoutingModule,
+    MatSnackBarModule
   ]
 })
 export class TicketBookingModule { }

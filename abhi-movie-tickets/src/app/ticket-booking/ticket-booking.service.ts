@@ -30,8 +30,9 @@ export class TicketBookingService {
   }
 
   bookTickets(reqBody: IBookTicketsReq): Observable<IBookTicketsRes> {
+    const options: IHeaders = this.getOptions('bookTickets');
     const url = `${zhUrlConstants.baseUrl}${zhUrlConstants.ticketBookingBaseUrl}`;
-    return this.http.post<IBookTicketsRes>(url, reqBody);
+    return this.http.post<IBookTicketsRes>(url, reqBody, options);
   }
 
 }

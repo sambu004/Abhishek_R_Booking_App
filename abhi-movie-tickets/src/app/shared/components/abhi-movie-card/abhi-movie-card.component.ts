@@ -30,5 +30,6 @@ onShowClicked(showTime: any, index: any) {
     showTime: showTime,
     bookedSeats: this.movieData.bookedSeats[index]
   }
+  this.onShowClick.emit(eventDetails);
 }
 }

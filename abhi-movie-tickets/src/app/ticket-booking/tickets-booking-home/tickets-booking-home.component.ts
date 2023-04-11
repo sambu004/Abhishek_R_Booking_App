@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { IGetTheatresAndMoviesReq, IGetTheatresAndMoviesRes, IMoviesRes } from 'src/app/shared/models/ticket-booking-api-interface.model';
+import { IBookTicketsReq, IBookTicketsRes, IGetTheatresAndMoviesReq, IGetTheatresAndMoviesRes, IMoviesRes } from 'src/app/shared/models/ticket-booking-api-interface.model';
 import { TicketBookingService } from '../ticket-booking.service';
 import { BOOKING_APP } from 'src/app/shared/constants/ticket-booking-constants';
-import { IMovieDetail, IMovies, ITheatres } from 'src/app/shared/models/theatre-and-movie-interface';
+import { IMovieCardEvent, IMovieDetail, IMovies, ITheatres } from 'src/app/shared/models/theatre-and-movie-interface';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-tickets-booking-home',
@@ -15,12 +16,18 @@ export class TicketsBookingHomeComponent implements OnInit {
   theatreAndMovieList: ITheatres[] = [];
   emailId!: string;
   showSpinner = false;
+  showModal = false;
   selectedTheatre!: ITheatres;
+  selectedMovieDetails!: IMovieCardEvent;
   listType: 'theatreList' | 'movieList' = 'theatreList';
   headerTitle: 'Theatres' | 'Movies' = 'Theatres';
-  constructor(private ticketService: TicketBookingService, private route: Router) {}
+  currentDate: any = new Date();
+  constructor(private ticketService: TicketBookingService, private route: Router, private notifier: MatSnackBar) {}
 
   ngOnInit(): void {
+    const date = `0${this.currentDate.getDate()}`.slice(-2);
+    const month = `0${this.currentDate.getMonth() + 1}`.slice(-2);
+    this.currentDate = `${date}/${month}/${this.currentDate.getFullYear()}`;
     const apiKey = sessionStorage.getItem(BOOKING_APP.apiKey);
     if(apiKey) {
       this.emailId = apiKey;
@@ -39,8 +46,16 @@ export class TicketsBookingHomeComponent implements OnInit {
       },
       error: ()=>{
         this.showSpinner = false;
+        this.route.navigateByUrl('/login');
       }
     });
+  }
+
+  cancelBooking() {
+    this.showModal = false;
+    this.listType = 'theatreList';
+    this.selectedMovieDetails = <IMovieCardEvent>{};
+    this.selectedTheatre = <ITheatres>{};
   }
 
   // creates a manipulative list of theatre with its movies and shows
@@ -88,13 +103,18 @@ export class TicketsBookingHomeComponent implements OnInit {
   // to filter the booked seats data with today's date
   filterAndConcatBookedSeatsdata(bookedSeats: any[], showKey: string, showTime: string): any[] {
     if (bookedSeats?.length > 0) {
-      const bookedSeatsArray: any = [];
-      let currentDate: any = new Date();
-      currentDate = currentDate.toLocaleString().split(',')[0];
+      let bookedSeatsArray: any = [];
       bookedSeats?.forEach((seats)=>{
-        if(seats.date = currentDate && seats[`${showKey}${BOOKING_APP.time}`] === showTime){
-          const seatList = JSON.parse(seats[`${showKey}${BOOKING_APP.seats}`]);
-          bookedSeatsArray.concat(seatList);
+        if(seats.date === this.currentDate && seats[`${showKey}${BOOKING_APP.time}`] === showTime){
+          let seatList = seats[`${showKey}${BOOKING_APP.seats}`].replace(/\[|\]/g,'').split(',');
+          seatList = seatList.map((data: any)=>{
+            if(Number(data) !== undefined){
+              return Number(data)
+            }  else {
+              return 0
+            }
+          })
+          bookedSeatsArray = bookedSeatsArray.concat(seatList);
         }
       });
       return bookedSeatsArray;
@@ -130,6 +150,49 @@ export class TicketsBookingHomeComponent implements OnInit {
     } else {
       this.listType = 'theatreList';
     }
+  }
+
+  openModalForBooking(event: any) {
+    this.selectedMovieDetails = event;
+    this.showModal = true;
+  }
+
+  openNotifier(message: string, type: 'Success' | 'failure') {
+    this.notifier.open(message, type, {duration: 3000})
+  }
+
+  bookTickets(bookedSeats: []){
+    if(bookedSeats.length === 0){
+      this.openNotifier('Please select seats to Book tickets', 'failure');
+      return;
+    }
+    this.showModal = false;
+    const bookingReq: IBookTicketsReq = {
+      movie_name: this.selectedMovieDetails.movieName,
+      theatre_name: this.selectedMovieDetails.theatreName,
+      show_time: this.selectedMovieDetails.showTime,
+      booked_seats: JSON.stringify(bookedSeats),
+      date: this.currentDate,
+      user_mail_id: this.emailId
+    }
+    this.showSpinner = true;
+    this.ticketService.bookTickets(bookingReq).subscribe({
+      next:(res: IBookTicketsRes)=>{
+        this.showSpinner = false;
+        this.listType = 'theatreList';
+        this.selectedMovieDetails = <IMovieCardEvent>{};
+        this.selectedTheatre = <ITheatres>{};
+        this.openNotifier(res.message, 'Success');
+        const reqObj: IGetTheatresAndMoviesReq = <IGetTheatresAndMoviesReq>{};
+        reqObj.user_mail_id = this.emailId;
+        this.showSpinner = true;
+        this.getAllTheatresAndMovies(reqObj);
+      },
+      error: (err)=>{
+        this.showSpinner = false;
+        this.openNotifier('Booking Tickets failed', 'failure');
+      }
+    });
   }
 
 }
