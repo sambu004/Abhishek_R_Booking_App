@@ -14,6 +14,9 @@ export class AbhiSeatSelectorComponent implements OnInit {
   }
 
   onSeatSelection(): void {
+    if(this.isDisabled){
+      return;
+    }
     this.isSelected = !this.isSelected;
     this.onSeatClick.emit(this.seatId);
   }
