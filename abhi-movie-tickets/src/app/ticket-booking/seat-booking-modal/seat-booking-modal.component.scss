@@ -12,5 +12,60 @@
 }
 
 .ab-note{
+    margin-top: 10px;
     color: var(--ab-shine-red);
+    font-size: 13px;
+    display: inline-block;
+}
+
+.ab-screen-container {
+    display: inline-flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.ab-screen-text{
+    font-size: 10px;
+    border: 1px dashed var(--ab-disabled-gray);
+    width: 350px;
+    text-align: center;
+    border-radius: var(--rounded-border-radius);
+}
+
+.ab-seat-info {
+    display: inline-flex;
+    margin-right: 10px;
+    font-size: 13px;
+}
+
+.ab-seat-selected {
+    margin-right: 10px;
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+.mt-20{
+    margin-top: 20px;
+}
+
+.pb-20 {
+    padding-bottom: 20px;
+}
+
+.ab-seat-number-container{
+    margin-right: 5px;
+}
+
+.ab-seat-numbers {
+    font-size: 13px;
+    text-align: center;
+    width: 25px;
+}
+
+.ab-seat-label {
+    font-size: 13px;
+    width: 25px;
+    padding-right: 20px;
 }

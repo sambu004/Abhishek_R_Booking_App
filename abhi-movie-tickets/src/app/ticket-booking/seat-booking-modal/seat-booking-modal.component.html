@@ -10,15 +10,35 @@
             </div>
         </div>
         <div class="modal-body">
+          <table>
+            <tr>
+              <ng-template ngFor let-displayCol [ngForOf]="colSeatNumbers" let-seatRowId="index"><td class="ab-seat-numbers pb-20">{{displayCol}}</td></ng-template>
+            </tr>
             <ng-template ngFor let-seatRow [ngForOf]="seatRows" let-rowId="index">
-                <div class="ab-row ab-row-center">
-                    <ng-template ngFor let-seatCol [ngForOf]="seatRow" let-colId="index">
-                        <div><abhi-seat-selector (onSeatClick)="saveSelectedSeats($event)" [seatId]="seatCol.id" [isDisabled]="seatCol.isDisabled"></abhi-seat-selector></div>
-                    </ng-template>
-                </div>
-            </ng-template>
-            <div class="ab-info"><i>Click on the seat icon to select the seats.</i></div>
+              <tr>
+                <td class="ab-seat-label">{{rowSeatLabel[rowId]}}</td>
+                  <ng-template ngFor let-seatCol [ngForOf]="seatRow" let-colId="index">
+                      <td class="ab-seat-numbers">
+                        <abhi-seat-selector (onSeatClick)="saveSelectedSeats($event, rowSeatLabel[rowId], colId)" [seatId]="seatCol.id" [isDisabled]="seatCol.isDisabled"></abhi-seat-selector>
+                      </td>
+                  </ng-template>
+                </tr>
+          </ng-template>
+          </table>
+          <div class="ab-screen-container">
+            <div class="ab-screen-text">
+              Screen this way
+            </div>
+          </div>
+            <div class="ab-seat-info mt-20 ab-left">
+              <div class="ab-seat-info" ><abhi-seat-selector [seatId]="0" ></abhi-seat-selector><i> - Available</i></div>
+              <div class="ab-seat-info" ><abhi-seat-selector [seatId]="0" [isSelected]="true"></abhi-seat-selector><i> - Selected</i></div>
+              <div class="ab-seat-info" ><abhi-seat-selector [seatId]="0" [isDisabled]="true"></abhi-seat-selector><i> - Booked</i></div>
+            </div>
             <div class="ab-note"><i>Please note that tickets cannot be cancelled.</i></div>
+            <div *ngIf="displayNumbers.length > 0" class="ab-seat-selected">
+              <i>Seats Selected - <span *ngFor="let seat of displayNumbers; index as i;"><span *ngIf="i > 0">, </span>{{seat}}</span></i>
+            </div>
         </div>
         <div class="modal-footer">
             <div><button class="ab-login-button ab-focus-color" (click)="onCancel()" mat-raised-button>Cancel</button></div>

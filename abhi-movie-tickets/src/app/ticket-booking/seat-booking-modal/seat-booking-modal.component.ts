@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { BOOKING_APP } from 'src/app/shared/constants/ticket-booking-constants';
 import { IMovieCardEvent } from 'src/app/shared/models/theatre-and-movie-interface';
 
 @Component({
@@ -13,6 +14,10 @@ export class SeatBookingModalComponent implements OnInit {
   seatRows: any = [];
   numberOfSeats: number = 100;
   selectedSeats: any[] = [];
+  colSeatNumbers = BOOKING_APP.seatColNumbers;
+  rowSeatLabel = BOOKING_APP.seatRowLabel.reverse();
+  displayNumbers: any[] = [];
+
   ngOnInit(): void {
     this.createSeatList();
     console.log(this.selectedMovieDetails.bookedSeats);
@@ -21,7 +26,8 @@ export class SeatBookingModalComponent implements OnInit {
   createSeatList(): void {
     let seatCol = [];
     for(let i = 1; i <=this.numberOfSeats; i++){
-      if(i%10 === 0){
+      const seatLabelIndex: any = seatCol.length === 0? 0 : seatCol.length - 1
+      if(i%20 === 0){
         seatCol.push(this.createSeatObj(i));
         this.seatRows.push(seatCol);
         seatCol = [];
@@ -43,12 +49,15 @@ export class SeatBookingModalComponent implements OnInit {
   }
 
   //selecting or deselecting seats
-  saveSelectedSeats(seatId: any): void {
+  saveSelectedSeats(seatId: any, label: any, colId: any): void {
       const seatIndex = this.selectedSeats.indexOf(seatId);
+      const displayIndex = this.displayNumbers.indexOf(seatId);
       if(seatIndex !== -1) {
         this.selectedSeats.splice(seatIndex, 1);
+        this.displayNumbers.splice(displayIndex, 1);
       } else {
         this.selectedSeats.push(seatId);
+        this.displayNumbers.push(`${label}${colId + 1}`);
       }
   }
 
