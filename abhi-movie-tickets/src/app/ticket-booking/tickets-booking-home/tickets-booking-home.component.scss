@@ -1,6 +1,6 @@
 .ab-theatre-movie-container {
     .ab-header{
-        background: #EFE5FD;
+        background: royalblue;
         z-index: 1;
         position: fixed;
         top: 0;
@@ -14,9 +14,18 @@
             margin-left: 10px;
         }
         .ab-header-title {
-            width: 50%;
+            width: 65%;
             font-size: 25px;
+            color: #ffff;
         }
+    }
+
+    .ab-movie-date-picker {
+        z-index: 1;
+        position: fixed;
+        width: 50%;
+        margin-left: calc(50vw);
+        text-align-last: right;   
     }
     
     .ab-section {

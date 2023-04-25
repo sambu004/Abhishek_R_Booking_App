@@ -5,6 +5,7 @@ import { BOOKING_APP } from 'src/app/shared/constants/ticket-booking-constants';
 import { IMovieCardEvent, IMovieDetail, IMovies, ITheatres } from 'src/app/shared/models/theatre-and-movie-interface';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-tickets-booking-home',
@@ -14,17 +15,23 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 export class TicketsBookingHomeComponent implements OnInit {
   theatreAndMovieList: ITheatres[] = [];
+  apiResponse: any;
   emailId!: string;
   showSpinner = false;
   showModal = false;
   selectedTheatre!: ITheatres;
   selectedMovieDetails!: IMovieCardEvent;
-  listType: 'theatreList' | 'movieList' = 'theatreList';
+  listType: 'theatreList' | 'movieList' | 'none' = 'theatreList';
   headerTitle: 'Theatres' | 'Movies' = 'Theatres';
   currentDate: any = new Date();
+  selectedDate: any;
+  movieStartDate: any;
+  movieEndDate: any;
   constructor(private ticketService: TicketBookingService, private route: Router, private notifier: MatSnackBar) {}
 
   ngOnInit(): void {
+    this.movieStartDate = new Date();
+    this.movieEndDate = new Date(this.movieStartDate.getFullYear(), this.movieStartDate.getMonth(), this.movieStartDate.getDate() + 5);
     const date = `0${this.currentDate.getDate()}`.slice(-2);
     const month = `0${this.currentDate.getMonth() + 1}`.slice(-2);
     this.currentDate = `${date}/${month}/${this.currentDate.getFullYear()}`;
@@ -38,10 +45,22 @@ export class TicketsBookingHomeComponent implements OnInit {
     this.getAllTheatresAndMovies(reqObj);
   }
 
+  dateChanged(dateValue: MatDatepickerInputEvent<Date>) {
+    const selectedDate: any = dateValue.value;
+    const date = `0${selectedDate?.getDate()}`.slice(-2);
+    const month = `0${selectedDate?.getMonth() + 1}`.slice(-2);
+    this.selectedDate = `${date}/${month}/${selectedDate.getFullYear()}`;
+    this.currentDate = this.selectedDate;
+    this.listType = 'none';
+    this.createDataStructure(this.apiResponse);
+    this.listType = 'theatreList';
+  }
+
   getAllTheatresAndMovies(reqObj: IGetTheatresAndMoviesReq): void {
     this.ticketService.getAllTheatresAndMovies(reqObj).subscribe({
       next: (res: IGetTheatresAndMoviesRes)=>{
         this.createDataStructure(res);
+        this.apiResponse = res;
         this.listType = 'theatreList';
         this.showSpinner = false;
       },
@@ -56,12 +75,21 @@ export class TicketsBookingHomeComponent implements OnInit {
   cancelBooking() {
     this.showModal = false;
     this.listType = 'theatreList';
+    this.headerTitle = 'Theatres';
     this.selectedMovieDetails = <IMovieCardEvent>{};
     this.selectedTheatre = <ITheatres>{};
   }
 
+  resetData() {
+    this.selectedMovieDetails = <IMovieCardEvent>{};
+    this.selectedTheatre = <ITheatres>{};
+    this.theatreAndMovieList = [];
+    this.headerTitle = 'Theatres';
+  }
+
   // creates a manipulative list of theatre with its movies and shows
   createDataStructure(theatreMovieData: IGetTheatresAndMoviesRes) {
+    this.resetData();
     theatreMovieData.theatre.forEach((theatreData)=>{
       const theatresAndMovies: ITheatres = <ITheatres>{};
       theatresAndMovies.address = theatreData.address;
@@ -74,6 +102,7 @@ export class TicketsBookingHomeComponent implements OnInit {
       theatresAndMovies.movies = Array.from(moviesData.values());
       this.theatreAndMovieList.push(theatresAndMovies);
     });
+    console.log(this.theatreAndMovieList);
   }
 
   // creates a movies map with key as movie name and values as movie details
@@ -140,6 +169,10 @@ export class TicketsBookingHomeComponent implements OnInit {
   }
 
   getSelectedTheatre(theatre: ITheatres) {
+    if (!this.selectedDate) {
+      this.openNotifier('Please select a Date to Book tickets', 'failure');
+      return;
+    }
     this.selectedTheatre = theatre;
     this.listType = 'movieList';
     this.headerTitle = 'Movies';
@@ -174,7 +207,7 @@ export class TicketsBookingHomeComponent implements OnInit {
       theatre_name: this.selectedMovieDetails.theatreName,
       show_time: this.selectedMovieDetails.showTime,
       booked_seats: JSON.stringify(bookedSeats),
-      date: this.currentDate,
+      date: this.selectedDate,
       user_mail_id: this.emailId
     }
     this.showSpinner = true;
@@ -191,6 +224,7 @@ export class TicketsBookingHomeComponent implements OnInit {
         this.getAllTheatresAndMovies(reqObj);
       },
       error: (err)=>{
+        console.log(err);
         this.showSpinner = false;
         this.openNotifier('Booking Tickets failed', 'failure');
       }

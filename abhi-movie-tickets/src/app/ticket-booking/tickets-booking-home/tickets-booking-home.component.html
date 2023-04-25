@@ -7,6 +7,15 @@
             {{headerTitle}}
         </div>
     </div>
+    <div class="ab-movie-date-picker">
+        <mat-form-field style="height: 67px" appearance="fill">
+            <mat-label>Choose a date</mat-label>
+            <input (dateInput)="dateChanged($event)" matInput [min]="movieStartDate" [max]="movieEndDate" [matDatepicker]="movieDatePicker">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="movieDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #movieDatePicker disabled="false"></mat-datepicker>
+          </mat-form-field>
+    </div>
     <ng-template [ngIf]="showSpinner">
         <abhi-reel-spinner></abhi-reel-spinner>
     </ng-template>
