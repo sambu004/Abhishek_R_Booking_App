@@ -3,7 +3,7 @@ Its an assignment to showcase skills in Web Development(Angular)
 
 ## Development server
 
-After cloning the repository, navigate to the `abhi-movie-tickets` folder and Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+After cloning the repository, navigate to the `abhi-movie-tickets` folder and Run `npm install` and then run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
 ## Key Feature
 
