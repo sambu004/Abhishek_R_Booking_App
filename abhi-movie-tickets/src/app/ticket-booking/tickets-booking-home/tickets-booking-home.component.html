@@ -1,47 +1,104 @@
 <div class="ab-theatre-movie-container">
     <div class="ab-header">
         <div class="ab-header-button">
-            <button class="ab-login-button ab-focus-color" (click)="goToLogin()" mat-raised-button> Back</button>
+            <div>
+                <button class="ab-login-button ab-focus-color" (click)="onBackButton()" mat-raised-button> Back</button>
+            </div>
+            <div class="ab-toggle-list">
+                <mat-button-toggle-group (change)="viewTypeToggleChange()" [(ngModel)]="listingViewType" name="listingType" aria-label="select theatres or movies">
+                    <mat-button-toggle value="theatreView">Theatre</mat-button-toggle>
+                    <mat-button-toggle value="movieView">Movie</mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
         </div>
-        <div class="ab-header-title">
-            {{headerTitle}}
+        <div class="ab-header-title-container">
+            <div class="ab-header-title">{{headerTitle}}</div>
+            <div class="ab-movie-date-picker">
+                <mat-form-field appearance="fill">
+                    <mat-label>Choose a date</mat-label>
+                    <input (dateInput)="dateChanged($event)" matInput [min]="movieStartDate" [max]="movieEndDate" [matDatepicker]="movieDatePicker">
+                    <mat-datepicker-toggle matIconSuffix [for]="movieDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #movieDatePicker disabled="false"></mat-datepicker>
+                  </mat-form-field>
+            </div>
         </div>
-    </div>
-    <div class="ab-movie-date-picker">
-        <mat-form-field style="height: 67px" appearance="fill">
-            <mat-label>Choose a date</mat-label>
-            <input (dateInput)="dateChanged($event)" matInput [min]="movieStartDate" [max]="movieEndDate" [matDatepicker]="movieDatePicker">
-            <mat-hint>MM/DD/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="movieDatePicker"></mat-datepicker-toggle>
-            <mat-datepicker #movieDatePicker disabled="false"></mat-datepicker>
-          </mat-form-field>
     </div>
     <ng-template [ngIf]="showSpinner">
         <abhi-reel-spinner></abhi-reel-spinner>
     </ng-template>
-    <ng-template [ngIf]="listType === 'theatreList'">
-        <mat-grid-list class="ab-section" cols="3">
-            <ng-template ngFor let-theatre [ngForOf]="theatreAndMovieList" let-i="index">
-                <mat-grid-tile>
-                    <abhi-theatre-card (onTheatreCardClick)="getSelectedTheatre($event)"
-                        [theatreDetails]="theatre"></abhi-theatre-card>
-                </mat-grid-tile>
-            </ng-template>
-        </mat-grid-list>
-    </ng-template>
-    <ng-template [ngIf]="listType === 'movieList'">
-        <div class="container-fluid ab-section">
-            <div class="row align-items-center">
-                <div class="col-lg-2">
+    <ng-template [ngIf]="listingViewType === 'theatreView'">
+        <ng-template [ngIf]="listType === 'theatreList'">
+            <div class="ab-section">
+                <div class="row">
+                    <ng-template ngFor let-theatre [ngForOf]="theatreAndMovieList" let-i="index">
+                        <div class="col-sm-6 col-lg-4 ab-grid-list">
+                            <abhi-theatre-card (onTheatreCardClick)="getSelectedTheatre($event)"
+                                [theatreDetails]="theatre"></abhi-theatre-card>
+                        </div>
+                    </ng-template>
                 </div>
-                <ng-template ngFor let-movie [ngForOf]="selectedTheatre.movies" let-i="index">
-                    <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center align-items-center">
-                        <abhi-movie-card [movieData]="movie"
-                            [theatreName]="selectedTheatre.theatreName" (onShowClick)="openModalForBooking($event)"></abhi-movie-card>
-                    </div>
-                </ng-template>
             </div>
-        </div>
+        </ng-template>
+        <ng-template [ngIf]="listType === 'movieList'">
+            <div class="container-fluid ab-section">
+                <div class="row align-items-center">
+                    <div class="col-lg-2">
+                    </div>
+                    <ng-template ngFor let-movie [ngForOf]="selectedTheatre.movies" let-i="index">
+                        <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center align-items-center">
+                            <abhi-movie-card [movieData]="movie" [bookingType]="'movie'"
+                                [theatreName]="selectedTheatre.theatreName" (onShowClick)="openModalForBooking($event)"></abhi-movie-card>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </ng-template>
+    </ng-template>
+    <ng-template [ngIf]="listingViewType === 'movieView'">
+        <ng-template [ngIf]="listType === 'movieList'">
+            <div class="ab-section">
+                <div class="row">
+                    <div class="col-sm-6 col-lg-4 ab-grid-list" *ngFor="let movie of apiResponse.movies">
+                        <abhi-movie-card [movieDetail]="movie" [bookingType]="'theatre'"
+                        (onMovieClick)="showTheatreList($event)"></abhi-movie-card>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template [ngIf]="listType === 'theatreList'">
+            <div class="ab-movie-theatre-list-container">
+                <mat-list class="ab-list-container">
+                    <mat-list-item class="ab-list-item" lines="2" *ngFor="let theatre of theatreListFromMovie">
+                        <img matListItemAvatar class="ab-theatre-avatar" [src]="theatre.theatreImage" [alt]="theatre.theatreName"
+                            onerror="this.onerror=null; this.src='https://wallpapercave.com/wp/wp2411599.jpg'">
+                        <h3 matListItemTitle>{{theatre.theatreName}}</h3>
+                        <mat-divider></mat-divider>
+                        <p matListItemLine>
+                            <span>
+                                <div class="ab-rating">
+                                    <div class="rating-icon">
+                                        <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M10 0L12.2451 6.56434H19.5106L13.6327 10.6213L15.8779 17.1857L10 13.1287L4.12215 17.1857L6.36729 10.6213L0.489435 6.56434H7.75486L10 0Z"
+                                                fill="#F5E026" />
+                                        </svg>
+                                    </div>
+                                    <div class="rating-text">{{theatre.customerRating}}</div>
+                                </div>
+                            </span>
+                            <span class="ab-theatre-address">
+                                {{theatre.address}}
+                            </span>
+                        </p>
+                        <div matListItemLine>
+                            <ng-template ngFor let-show [ngForOf]="theatre.movies[theatre.movieIndex].shows" let-i="index">
+                                <abhi-badge class="pr-10" [badgetype]="setBadgeType(i, theatre.movies[theatre.movieIndex].bookedSeats)" [badgeText]="show" (onBadgeClick)="onTheatreShowClicked($event, i, theatre.movies[theatre.movieIndex], theatre.theatreName)"></abhi-badge>
+                            </ng-template>
+                        </div>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+        </ng-template>
     </ng-template>
 </div>
 <ng-template [ngIf]="showModal">

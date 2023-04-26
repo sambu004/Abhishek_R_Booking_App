@@ -22,11 +22,15 @@ export class TicketsBookingHomeComponent implements OnInit {
   selectedTheatre!: ITheatres;
   selectedMovieDetails!: IMovieCardEvent;
   listType: 'theatreList' | 'movieList' | 'none' = 'theatreList';
+  listingViewType: 'theatreView' | 'movieView' = 'theatreView';
   headerTitle: 'Theatres' | 'Movies' = 'Theatres';
   currentDate: any = new Date();
   selectedDate: any;
   movieStartDate: any;
   movieEndDate: any;
+  //for movie list scenario
+  theatreListFromMovie: any;
+  selectedMovieName!: string;
   constructor(private ticketService: TicketBookingService, private route: Router, private notifier: MatSnackBar) {}
 
   ngOnInit(): void {
@@ -51,9 +55,15 @@ export class TicketsBookingHomeComponent implements OnInit {
     const month = `0${selectedDate?.getMonth() + 1}`.slice(-2);
     this.selectedDate = `${date}/${month}/${selectedDate.getFullYear()}`;
     this.currentDate = this.selectedDate;
+    this.showSpinner = true;
     this.listType = 'none';
     this.createDataStructure(this.apiResponse);
-    this.listType = 'theatreList';
+    if(this.listingViewType === 'theatreView') {
+      this.listType = 'theatreList';
+    } else {
+      this.listType = 'movieList'
+    }
+    this.showSpinner = false;
   }
 
   getAllTheatresAndMovies(reqObj: IGetTheatresAndMoviesReq): void {
@@ -61,7 +71,11 @@ export class TicketsBookingHomeComponent implements OnInit {
       next: (res: IGetTheatresAndMoviesRes)=>{
         this.createDataStructure(res);
         this.apiResponse = res;
-        this.listType = 'theatreList';
+        if(this.listingViewType === 'theatreView') {
+          this.listType = 'theatreList';
+        } else {
+          this.listType = 'movieList';
+        }
         this.showSpinner = false;
       },
       error: ()=>{
@@ -74,10 +88,7 @@ export class TicketsBookingHomeComponent implements OnInit {
 
   cancelBooking() {
     this.showModal = false;
-    this.listType = 'theatreList';
-    this.headerTitle = 'Theatres';
     this.selectedMovieDetails = <IMovieCardEvent>{};
-    this.selectedTheatre = <ITheatres>{};
   }
 
   resetData() {
@@ -85,6 +96,13 @@ export class TicketsBookingHomeComponent implements OnInit {
     this.selectedTheatre = <ITheatres>{};
     this.theatreAndMovieList = [];
     this.headerTitle = 'Theatres';
+  }
+
+  resetCommonData() {
+    this.selectedMovieDetails = <IMovieCardEvent>{};
+    this.selectedTheatre = <ITheatres>{};
+    this.theatreListFromMovie = null;
+    this.selectedMovieName = '';
   }
 
   // creates a manipulative list of theatre with its movies and shows
@@ -102,7 +120,6 @@ export class TicketsBookingHomeComponent implements OnInit {
       theatresAndMovies.movies = Array.from(moviesData.values());
       this.theatreAndMovieList.push(theatresAndMovies);
     });
-    console.log(this.theatreAndMovieList);
   }
 
   // creates a movies map with key as movie name and values as movie details
@@ -178,13 +195,23 @@ export class TicketsBookingHomeComponent implements OnInit {
     this.headerTitle = 'Movies';
   }
 
-  goToLogin() {
-    if(this.listType === 'theatreList'){
-      sessionStorage.removeItem(BOOKING_APP.apiKey);
-      this.route.navigateByUrl('/login');
+  onBackButton() {
+    if(this.listingViewType === 'theatreView'){
+      if(this.listType === 'theatreList'){
+        sessionStorage.removeItem(BOOKING_APP.apiKey);
+        this.route.navigateByUrl('/login');
+      } else {
+        this.listType = 'theatreList';
+      }
     } else {
-      this.listType = 'theatreList';
+      if(this.listType === 'movieList'){
+        sessionStorage.removeItem(BOOKING_APP.apiKey);
+        this.route.navigateByUrl('/login');
+      } else {
+        this.listType = 'movieList';
+      }
     }
+    this.resetCommonData();
   }
 
   openModalForBooking(event: any) {
@@ -224,11 +251,59 @@ export class TicketsBookingHomeComponent implements OnInit {
         this.getAllTheatresAndMovies(reqObj);
       },
       error: (err)=>{
-        console.log(err);
         this.showSpinner = false;
         this.openNotifier('Booking Tickets failed', 'failure');
       }
     });
+  }
+
+  showTheatreList(movieName: string) {
+    if (!this.selectedDate) {
+      this.openNotifier('Please select a Date to Book tickets', 'failure');
+      return;
+    }
+    this.selectedMovieName = movieName; 
+    this.theatreListFromMovie = this.theatreAndMovieList.filter((data)=>{
+      return data.movieNames.includes(movieName);
+    });
+    this.theatreListFromMovie = this.theatreListFromMovie.map((data: ITheatres) => {
+      data.movieIndex = data.movieNames.indexOf(movieName);
+      return data;
+    });
+    this.listType = 'theatreList';
+    this.headerTitle = 'Theatres';
+  }
+
+  viewTypeToggleChange() {
+    this.resetCommonData();
+    if(this.listingViewType === 'movieView') {
+      this.listType = 'movieList';
+      this.headerTitle = 'Movies';
+    } else {
+      this.listType = 'theatreList';
+      this.headerTitle = 'Theatres';
+    }
+  }
+
+  onTheatreShowClicked(showTime: string, i: any, movieDetail: any, theatreName: string) {
+    this.selectedMovieDetails = <IMovieCardEvent>{};
+    this.selectedMovieDetails.showTime = showTime;
+    this.selectedMovieDetails.movieName = movieDetail.movieName;
+    this.selectedMovieDetails.bookedSeats = movieDetail.bookedSeats[i];
+    this.selectedMovieDetails.theatreName = theatreName;
+    this.showModal = true;
+  }
+
+  setBadgeType(i: any, bookedSeats: any): any{
+    if(bookedSeats[i].length > 50){
+      return 'warning';
+    } 
+    if(bookedSeats[i].length > 50) {
+      return 'redZone';
+    }
+    if(bookedSeats[i].length < 50) {
+      return 'available';
+    }
   }
 
 }

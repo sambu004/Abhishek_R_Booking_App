@@ -6,20 +6,17 @@
         width: 25px;
     }
     .ab-image {
-        width: 60%;
+        width: 200px;
+        height: 250px;
         align-self: center;
     }
     max-width: 300px;
     cursor: pointer;
-    .ab-rating{
-        display: inline-flex;
-        .rating-text {
-            margin-left: 5px;
-            font-size: 14px;
-            align-self: self-end;
-        }
-    }
+
     .ab-movie-release {
         font-size: 14px;
+    }
+    #ab-theatre-list {
+        cursor: pointer;
     }
 }

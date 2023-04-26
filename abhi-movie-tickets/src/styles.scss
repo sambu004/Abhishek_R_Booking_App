@@ -69,3 +69,12 @@ body {
 .ab-right {
     float: right;
 }
+
+.ab-rating{
+    display: inline-flex;
+    .rating-text {
+        margin-left: 5px;
+        font-size: 14px;
+        align-self: self-end;
+    }
+}

@@ -6,6 +6,7 @@ export interface ITheatres {
     address: string;
     movieNames: any[];
     movies: IMovies[];
+    movieIndex?: any; 
 }
 
 export interface IMovies {

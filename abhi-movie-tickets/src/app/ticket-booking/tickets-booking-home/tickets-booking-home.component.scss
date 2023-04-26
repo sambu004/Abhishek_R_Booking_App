@@ -5,30 +5,68 @@
         position: fixed;
         top: 0;
         width: 100%;
-        height: 45px;
+        height: 80px;
         border-bottom: 1px solid var(--ab-disabled-gray);
         display: inline-flex;
         .ab-header-button{
             width: 50%;
             margin-top: 5px;
             margin-left: 10px;
+            display: inline-flex;
+            align-items: center;
+            .ab-toggle-list {
+                margin-left: 100px;
+            }
         }
-        .ab-header-title {
+        .ab-header-title-container {
+            display: inline-flex;
             width: 65%;
-            font-size: 25px;
-            color: #ffff;
+            .ab-header-title {
+                width: 50%;
+                font-size: 25px;
+                color: #ffff;
+                align-self: center;
+            }
+            .ab-movie-date-picker {
+                width: 50%;
+                margin-top: 15px;
+                display: inline-flex;
+                justify-content: end;
+                height: fit-content;
+            }
         }
-    }
 
-    .ab-movie-date-picker {
-        z-index: 1;
-        position: fixed;
-        width: 50%;
-        margin-left: calc(50vw);
-        text-align-last: right;   
     }
     
     .ab-section {
-        padding-top: calc(100vh - 560px);
+        padding-top: 150px;
+    }
+
+    .ab-grid-list {
+        display: inline-flex;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+
+    .ab-movie-theatre-list-container  {
+        margin: 100px 200px;
+        border: 1px solid var(--ab-disabled-gray);
+        border-radius: var(--lg-border-radius);
+        background-color: #ffff;
+        .ab-list-container{
+            min-height: 120px;
+            .ab-list-item{
+                min-height: 120px;
+                margin-bottom: 5px;
+                .ab-theatre-avatar {
+                    width: 100px;
+                    height: 100px;
+                }
+                .ab-theatre-address {
+                    margin-left: 20px;
+                    font-size: x-small;
+                }
+            }
+        }
     }
 }
